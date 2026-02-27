@@ -23,7 +23,21 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
+
+            echo "📂 Entering app directory..."
             cd ~/budget-bites-app
+
+            echo "🐍 Ensuring Python 3.12 is installed..."
+            if ! command -v python3.12 &> /dev/null; then
+              sudo yum install python3.12 -y || sudo apt install python3.12 -y
+            fi
+
+            echo "🧹 Removing old virtual environment..."
+            rm -rf .venv
+
+            echo "🚀 Running deployment script..."
             chmod +x run.sh
             ./run.sh
+
+            echo "📄 Showing latest logs..."
             tail -n 50 log.txt
