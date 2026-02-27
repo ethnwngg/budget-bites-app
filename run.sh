@@ -27,12 +27,11 @@ if [ -f "requirements.txt" ]; then
 fi
 
 # --- Stop any previous instance of this app ---
-pkill -f "python $APP_FILE" || true
+pkill -f ".venv/bin/python $APP_FILE" || echo "No old process to kill"
+#pkill -f "python $APP_FILE" || true
 
 # --- Start Flask app in background ---
 nohup python "$APP_FILE" > log.txt 2>&1 &
 
 echo "✅ App started on port $PORT"
 echo "Tail logs with: tail -n 200 -f $APP_DIR/log.txt"
-
-pkill -f ".venv/bin/python $APP_FILE" || echo "No old process to kill"
