@@ -1,31 +1,36 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# --- Configuration ---
 APP_DIR="$HOME/budget-bites-app"
 APP_FILE="budget-app.py"
+PORT=5050
 
 cd "$APP_DIR"
 
-# Pull latest code
+# --- Pull latest code from GitHub ---
 git fetch --all
 git reset --hard origin/main
 
-# Ensure venv exists
+# --- Ensure Python virtual environment exists ---
 if [ ! -d ".venv" ]; then
     python3 -m venv .venv
 fi
 
-# Now PY exists
-PY="$APP_DIR/.venv/bin/python"
+# --- Activate virtual environment ---
+source "$APP_DIR/.venv/bin/activate"
 
-# Install/update deps
-"$PY" -m pip install -U pip
-"$PY" -m pip install -r requirements.txt
+# --- Install/update dependencies ---
+pip install --upgrade pip
+if [ -f "requirements.txt" ]; then
+    pip install -r requirements.txt
+fi
 
-# Stop previous process (if any)
-pkill -f "$PY $APP_FILE" || true
+# --- Stop any previous instance of this app ---
+pkill -f "python $APP_FILE" || true
 
-# Start new process
-nohup "$PY" "$APP_FILE" > log.txt 2>&1 &
+# --- Start Flask app in background ---
+nohup python "$APP_FILE" > log.txt 2>&1 &
 
-echo "Started. Tail logs with: tail -n 200 -f $APP_DIR/log.txt"
+echo "✅ App started on port $PORT"
+echo "Tail logs with: tail -n 200 -f $APP_DIR/log.txt"
