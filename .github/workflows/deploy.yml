@@ -49,10 +49,10 @@ jobs:
             pip install --no-cache-dir -r requirements.txt
 
             # --- Stop previous app instance ---
-            pkill -f ".venv/bin/python budget-app.py" || true
+            pkill -f ".venv/bin/python $APP_FILE" || echo "No old process to kill"
 
             # --- Start app in background ---
             nohup .venv/bin/python budget-app.py > log.txt 2>&1 &
 
-            echo "✅ App started on port 5050"
+            echo "App started on port 5050"
             tail -n 50 log.txt
