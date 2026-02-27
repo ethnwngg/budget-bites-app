@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="$HOME/5-dollar-lunch-spring"
-APP_FILE="five-dollar-app.py"
+APP_DIR="$HOME/bidget-bites-app"
+APP_FILE="budget-app.py"
 PY="$APP_DIR/.venv/bin/python"
 
 cd "$APP_DIR"
