@@ -1,37 +1,30 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# --- Configuration ---
-APP_DIR="$HOME/budget-bites-app"
-APP_FILE="budget-app.py"
-PORT=5050
+APP_DIR="$HOME/5-dollar-lunch-spring"
+APP_FILE="five-dollar-app.py"
+PY="$APP_DIR/.venv/bin/python"
 
 cd "$APP_DIR"
 
-# --- Pull latest code from GitHub ---
+# Pull latest code (rebase is risky in automation; use a clean sync)
 git fetch --all
 git reset --hard origin/main
 
-# --- Ensure Python virtual environment exists ---
+# Ensure venv exists
 if [ ! -d ".venv" ]; then
-    python3 -m venv .venv
+  python3.12 -m venv .venv
 fi
 
-# --- Activate virtual environment ---
-source "$APP_DIR/.venv/bin/activate"
+# Install/update deps
+"$PY" -m pip install -U pip
+"$PY" -m pip install -r requirements.txt
 
-# --- Install/update dependencies ---
-pip install --upgrade pip
-if [ -f "requirements.txt" ]; then
-    pip install -r requirements.txt
-fi
+# Stop previous process (if any) by matching the exact command
+# This avoids killing unrelated python processes.
+pkill -f "$PY $APP_FILE" || true
 
-# --- Stop any previous instance of this app ---
-pkill -f ".venv/bin/python $APP_FILE" || echo "No old process to kill"
-#pkill -f "python $APP_FILE" || true
+# Start new process
+nohup "$PY" "$APP_FILE" > log.txt 2>&1 &
 
-# --- Start Flask app in background ---
-nohup python "$APP_FILE" > log.txt 2>&1 &
-
-echo "✅ App started on port $PORT"
-echo "Tail logs with: tail -n 200 -f $APP_DIR/log.txt"
+echo "Started. Tail logs with: tail -n 200 -f $APP_DIR/log.txt"
