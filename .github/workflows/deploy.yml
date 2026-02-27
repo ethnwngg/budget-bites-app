@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy (EC2 nohup)
 
 on:
   push:
@@ -15,40 +15,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
-            echo "📂 Entering app directory..."
             cd ~/budget-bites-app
-
-            # --- Ensure Python 3.12 is installed ---
-            echo "Ensuring Python 3.12 is installed..."
-            if ! command -v python3.12 &> /dev/null; then
-              echo "Installing Python 3.12..."
-              # Detect OS: Amazon Linux uses yum, Ubuntu uses apt
-              if command -v yum &> /dev/null; then
-                sudo yum install python3.12 -y
-              elif command -v apt &> /dev/null; then
-                sudo apt update && sudo apt install python3.12 -y
-              fi
-            fi
-
-            # --- Remove old virtualenv (optional, ensures clean install) ---
-            echo "🧹 Removing old virtual environment..."
-            rm -rf .venv
-
-            # --- Run deployment script ---
-            echo "Running run.sh..."
             chmod +x run.sh
             ./run.sh
-
-            echo "Showing latest logs..."
             tail -n 50 log.txt
