@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from pymongo import MongoClient
 
 MONGODB_URI = "mongodb+srv://ethanwong_db_user:0rrmjHFQeamCG3cn@budget-db.tlbx63r.mongodb.net/?appName=budget-db"
@@ -59,6 +59,6 @@ def search_food_items(budget):
         if food['price'] <= budget:
             food["_id"] = str(food["_id"])
             result.append(food)
-    return result
+    return jsonify(result)
 
 app.run(host= "0.0.0.0", port=5050)
