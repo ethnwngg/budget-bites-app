@@ -23,7 +23,36 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
+
+            echo "📂 Entering app directory..."
             cd ~/budget-bites-app
-            chmod +x run.sh
-            ./run.sh
+
+            # --- Ensure Python 3.12 is installed ---
+            if ! command -v python3.12 &> /dev/null; then
+              echo "🐍 Installing Python 3.12..."
+              sudo yum install -y python3.12 python3.12-venv || sudo apt install -y python3.12 python3.12-venv
+            fi
+
+            # --- Remove old venv ---
+            echo "🧹 Removing old virtual environment..."
+            rm -rf .venv
+
+            # --- Create new venv with Python 3.12 ---
+            echo "⚡ Creating virtual environment with Python 3.12..."
+            python3.12 -m venv .venv
+
+            # --- Activate venv ---
+            source .venv/bin/activate
+
+            # --- Upgrade pip and install dependencies ---
+            python -m pip install --upgrade pip
+            pip install --no-cache-dir -r requirements.txt
+
+            # --- Stop previous app instance ---
+            pkill -f ".venv/bin/python budget-app.py" || true
+
+            # --- Start app in background ---
+            nohup .venv/bin/python budget-app.py > log.txt 2>&1 &
+
+            echo "✅ App started on port 5050"
             tail -n 50 log.txt
