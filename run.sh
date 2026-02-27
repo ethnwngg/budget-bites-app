@@ -13,12 +13,12 @@ git reset --hard origin/main
 
 # Ensure venv exists
 if [ ! -d ".venv" ]; then
-  python3.12 -m venv .venv
+  python3 -m venv .venv
 fi
 
 # Install/update deps
 "$PY" -m pip install -U pip
-"$PY" -m pip install -r requirements.txt
+"$PY" -m pip install -r requirement.txt
 
 # Stop previous process (if any) by matching the exact command
 # This avoids killing unrelated python processes.
