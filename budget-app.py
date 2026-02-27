@@ -43,36 +43,16 @@ data = [
  ]
 
 @app.route("/")
-def index():
+def start_index():
     return render_template("index.html")
 
-@app.route("/search/<budget>")
-def search_food_items(budget):
-    print(f"Received search request: budget={budget}")
-    try:
-        budget = float(budget)
-    except ValueError:
-        return jsonify([])
-
-    result = [food for food in data if food["price"] <= budget]
-    print(f"Returning {len(result)} results")
-    return jsonify(result)
-
-if __name__ == "__main__":
-    # Host on all interfaces for EC2, port 5050
-    app.run(host="0.0.0.0", port=5050)
-
-#@app.route("/")
-#def start_index():
-    return render_template("index.html")
-
-#app.route("/welcome")
-#def welcome():
+@app.route("/welcome")
+def welcome():
     return "<html><body><h1><em>Welcome to CS4800! Enjoy the full-stack dev!</em></h1></body></html>"
 
-#@app.route("/search/<budget>")
+@app.route("/search/<budget>")
 
-#def search_food_items(budget):
+def search_food_items(budget):
     budget = float(budget)
     result = []
     for food in collection.find():
@@ -81,4 +61,4 @@ if __name__ == "__main__":
             result.append(food)
     return jsonify(result)
 
-#app.run(host= "0.0.0.0", port=5050)
+app.run(host= "0.0.0.0", port=5050)
