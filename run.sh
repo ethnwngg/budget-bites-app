@@ -34,3 +34,5 @@ nohup python "$APP_FILE" > log.txt 2>&1 &
 
 echo "✅ App started on port $PORT"
 echo "Tail logs with: tail -n 200 -f $APP_DIR/log.txt"
+
+pkill -f ".venv/bin/python $APP_FILE" || echo "No old process to kill"
