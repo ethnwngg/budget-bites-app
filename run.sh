@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="$HOME/bidget-bites-app"
+APP_DIR="$HOME/budget-bites-app"
 APP_FILE="budget-app.py"
 PY="$APP_DIR/.venv/bin/python"
 
