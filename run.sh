@@ -3,25 +3,26 @@ set -euo pipefail
 
 APP_DIR="$HOME/budget-bites-app"
 APP_FILE="budget-app.py"
-PY="$APP_DIR/.venv/bin/python"
 
 cd "$APP_DIR"
 
-# Pull latest code (rebase is risky in automation; use a clean sync)
+# Pull latest code
 git fetch --all
 git reset --hard origin/main
 
 # Ensure venv exists
 if [ ! -d ".venv" ]; then
-  python3 -m venv .venv
+    python3 -m venv .venv
 fi
+
+# Now PY exists
+PY="$APP_DIR/.venv/bin/python"
 
 # Install/update deps
 "$PY" -m pip install -U pip
-"$PY" -m pip install -r requirement.txt
+"$PY" -m pip install -r requirements.txt
 
-# Stop previous process (if any) by matching the exact command
-# This avoids killing unrelated python processes.
+# Stop previous process (if any)
 pkill -f "$PY $APP_FILE" || true
 
 # Start new process
