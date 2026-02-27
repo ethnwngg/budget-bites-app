@@ -61,4 +61,4 @@ def search_food_items(budget):
             result.append(food)
     return result
 
-app.run(host= "0.0.0.0", port=5005)
+app.run(host= "0.0.0.0", port=5050)
