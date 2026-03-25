@@ -10,6 +10,7 @@ cd "$APP_DIR"
 git fetch --all
 git reset --hard origin/main
 
+
 # Install/update deps globally
 python3 -m pip install -U pip
 python3 -m pip install -r requirements.txt
