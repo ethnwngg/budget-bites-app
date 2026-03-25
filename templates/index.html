@@ -175,7 +175,7 @@
             // 2. call the backend server URL /search/<budget> to get the returned results
             // ajax
             $.ajax({
-              url: `/search/${encodeURIComponent(budget)}`, // e.g. /search/500
+              url: `${window.location.origin}/search/${encodeURIComponent(budget)}`, // e.g. /search/500
               method: "GET",
               dataType: "json", // expect JSON back (change if needed)
               success: function (data) {
