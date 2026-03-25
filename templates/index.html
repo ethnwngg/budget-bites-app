@@ -174,8 +174,13 @@
 
             // 2. call the backend server URL /search/<budget> to get the returned results
             // ajax
+            let baseURL = window.location.origin;
+            if (baseURL.startsWith("file://")) {
+              baseURL = "http://3.128.226.117:5050";
+            }
+
             $.ajax({
-              url: `${window.location.origin}/search/${encodeURIComponent(budget)}`, // e.g. /search/500
+              url: `${baseURL}/search/${encodeURIComponent(budget)}`, // e.g. /search/500
               method: "GET",
               dataType: "json", // expect JSON back (change if needed)
               success: function (data) {
